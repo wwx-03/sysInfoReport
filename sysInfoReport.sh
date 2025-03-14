@@ -46,12 +46,22 @@ disk_usage=$(df -h | grep "/dev/sda2" | awk '{print $5}')
 disk_used=$(df -h | grep "/dev/sda2" | awk '{print $2 - $4}')
 disk_total=$(df -h | grep "/dev/sda2" | awk '{print $2}')
 
-printf "[DISK]	/:%s used (%sG/%s)\r\n" "$disk_usage" "$disk_used" "$disk_rest"
+printf "[DISK]	/:%s used (%sG/%s)\r\n" "$disk_usage" "$disk_used" "$disk_total"
 
 user_members=$(who | wc -l)
 
-printf "[Users]	%s\r\n" "$user_members"
+printf "[Users]	%s active: " "$user_members"
 
+index=1
+i=1
+while(( $i<=$user_members ))
+do
+	user_name=$(who | awk -v ind=$index '{print $ind}')
+	printf "%s " "$user_name"
+	index=`expr $index + 5`
+	let "i ++"
+done
+printf "\r\n"
 echo "=============================="
 
 
